@@ -613,6 +613,56 @@ function Home({ mode, toggleMode }) {
           Cada día contigo es la página más bonita de esta historia.
         </motion.p>
       </div>
+              <motion.div
+          {...fade(0.6)}
+          style={{
+            margin: "1.6rem 1.5rem 0",
+            maxWidth: "420px",
+            borderRadius: "16px",
+            border: "1px solid var(--brd)",
+            background: "var(--bg)",
+            backdropFilter: "blur(16px)",
+            padding: "1.4rem 1.5rem",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "'Bebas Neue',sans-serif",
+              fontSize: "2.4rem",
+              lineHeight: "0.6",
+              color: "var(--pink)",
+              opacity: 0.5,
+              display: "block",
+            }}
+          >
+            "
+          </span>
+          <p
+            style={{
+              fontSize: "0.88rem",
+              fontWeight: 300,
+              fontStyle: "italic",
+              color: "var(--c)",
+              lineHeight: 1.7,
+              marginTop: "0.4rem",
+            }}
+          >
+            Si algun dia vuelves aqui para recordar o te hace falta amor... recuerda que yo siempre tendre un amor inmenso por ti y si quieres volver a mi lado, siempre estare aqui para ti. Te amo con todo mi corazon y espero que nunca lo olvides, si volviera a nacer volveria a elegirte millones de veces, te amo hoy, mañana y siempre amor mio.
+          </p>
+          <span
+            style={{
+              fontFamily: "'Space Mono',monospace",
+              fontSize: "0.56rem",
+              letterSpacing: "0.18em",
+              color: "var(--pink)",
+              textTransform: "uppercase",
+              marginTop: "0.9rem",
+              display: "block",
+            }}
+          >
+            — Tu amor eterno, Eithan
+          </span>
+        </motion.div>
 
       {/* ── TICKER — CSS puro, sin motion en el wrapper ── */}
       <div className="lv4-ticker-outer">
