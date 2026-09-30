@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Favorite } from "@mui/icons-material";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import juntosVideo from "../../assets/Amorcito.mp4";
 
 dayjs.extend(duration);
 
@@ -613,56 +614,176 @@ function Home({ mode, toggleMode }) {
           Cada día contigo es la página más bonita de esta historia.
         </motion.p>
       </div>
-              <motion.div
-          {...fade(0.6)}
-          style={{
-            margin: "1.6rem 1.5rem 0",
-            maxWidth: "420px",
-            borderRadius: "16px",
-            border: "1px solid var(--brd)",
-            background: "var(--bg)",
-            backdropFilter: "blur(16px)",
-            padding: "1.4rem 1.5rem",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'Bebas Neue',sans-serif",
-              fontSize: "2.4rem",
-              lineHeight: "0.6",
-              color: "var(--pink)",
-              opacity: 0.5,
-              display: "block",
-            }}
-          >
-            "
-          </span>
-          <p
-            style={{
-              fontSize: "0.88rem",
-              fontWeight: 300,
-              fontStyle: "italic",
-              color: "var(--c)",
-              lineHeight: 1.7,
-              marginTop: "0.4rem",
-            }}
-          >
-            Si algun dia vuelves aqui para recordar o te hace falta amor... recuerda que yo siempre tendre un amor inmenso por ti y si quieres volver a mi lado, siempre estare aqui para ti. Te amo con todo mi corazon y espero que nunca lo olvides, si volviera a nacer volveria a elegirte millones de veces, te amo hoy, mañana y siempre amor mio.
-          </p>
-          <span
-            style={{
-              fontFamily: "'Space Mono',monospace",
-              fontSize: "0.56rem",
-              letterSpacing: "0.18em",
-              color: "var(--pink)",
-              textTransform: "uppercase",
-              marginTop: "0.9rem",
-              display: "block",
-            }}
-          >
-            — Tu amor eterno, Eithan
-          </span>
-        </motion.div>
+          {/* CARTA + VIDEO */}
+<motion.div
+  {...fade(0.6)}
+  style={{
+    margin: "1.6rem 1.5rem 0",
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "1rem",
+    alignItems: "stretch",
+  }}
+>
+  {/* CARTA */}
+  <div
+    style={{
+      flex: "1 1 320px",
+      maxWidth: "420px",
+      borderRadius: "16px",
+      border: "1px solid var(--brd)",
+      background: "var(--bg)",
+      backdropFilter: "blur(16px)",
+      padding: "1.4rem 1.5rem",
+    }}
+  >
+    <span
+      style={{
+        fontFamily: "'Bebas Neue',sans-serif",
+        fontSize: "2.4rem",
+        lineHeight: "0.6",
+        color: "var(--pink)",
+        opacity: 0.5,
+        display: "block",
+      }}
+    >
+      "
+    </span>
+    <p
+      style={{
+        fontSize: "0.88rem",
+        fontWeight: 300,
+        fontStyle: "italic",
+        color: "var(--c)",
+        lineHeight: 1.7,
+        marginTop: "0.4rem",
+      }}
+    >
+      Si algun dia vuelves aqui para recordar o te hace falta amor... recuerda que yo siempre tendre un amor inmenso por ti y si quieres volver a mi lado, siempre estare aqui para ti. Te amo con todo mi corazon y espero que nunca lo olvides, si volviera a nacer volveria a elegirte millones de veces, te amo hoy, mañana y siempre amor mio.
+    </p>
+    <span
+      style={{
+        fontFamily: "'Space Mono',monospace",
+        fontSize: "0.56rem",
+        letterSpacing: "0.18em",
+        color: "var(--pink)",
+        textTransform: "uppercase",
+        marginTop: "0.9rem",
+        display: "block",
+      }}
+    >
+      — Tu amor eterno, Eithan
+    </span>
+  </div>
+
+  {/* VIDEO */}
+  <motion.div
+    whileHover={{ y: -3, borderColor: "rgba(255,64,129,0.7)" }}
+    transition={{ duration: 0.25 }}
+    style={{
+      flex: "1 1 320px",
+      maxWidth: "420px",
+      position: "relative",
+      overflow: "hidden",
+      borderRadius: "16px",
+      border: "1px solid rgba(255,64,129,0.35)",
+      background: "var(--bg)",
+      backdropFilter: "blur(16px)",
+      padding: "1rem 1rem 1.1rem",
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.8rem",
+    }}
+  >
+    {/* resplandor */}
+    <div
+      style={{
+        position: "absolute",
+        top: "-40px",
+        right: "-40px",
+        width: "140px",
+        height: "140px",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,64,129,0.35), transparent 70%)",
+        filter: "blur(18px)",
+        pointerEvents: "none",
+      }}
+    />
+
+    {/* encabezado */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        position: "relative",
+        zIndex: 1,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'Space Mono',monospace",
+          fontSize: "0.56rem",
+          letterSpacing: "0.2em",
+          color: "var(--pink)",
+          textTransform: "uppercase",
+        }}
+      >
+        En este tiempo, por favor no dejes de amarme amor mio
+      </span>
+      <motion.span
+        animate={{ scale: [1, 1.3, 1] }}
+        transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+        style={{ color: "var(--pink)", display: "inline-block" }}
+      >
+        ♥
+      </motion.span>
+    </div>
+
+    {/* marco del video */}
+    <div
+      style={{
+        position: "relative",
+        zIndex: 1,
+        borderRadius: "12px",
+        overflow: "hidden",
+        background: "#000",
+        border: "1px solid var(--brd)",
+        boxShadow: "0 8px 30px rgba(255,64,129,0.18)",
+      }}
+    >
+      <video
+        src={juntosVideo}
+        controls
+        playsInline
+        preload="metadata"
+        // poster="/portada-video.jpg"
+        style={{
+          display: "block",
+          width: "100%",
+          maxHeight: "60vh",
+          objectFit: "contain",
+          background: "#000",
+        }}
+      />
+    </div>
+
+    <p
+      style={{
+        position: "relative",
+        zIndex: 1,
+        fontSize: "0.74rem",
+        fontWeight: 300,
+        fontStyle: "italic",
+        color: "var(--cm)",
+        textAlign: "center",
+        margin: 0,
+      }}
+    >
+      Estoy seguro que volveremos a ser estos dos, no te tardes tanto por favor, yo te estare esparando mi vida entera si es necesarioe, te prometo amarte por el resto de mis dias, te amo y te extraño cada dia más mi vida hermosa ♥
+    </p>
+  </motion.div>
+</motion.div>
 
       {/* ── TICKER — CSS puro, sin motion en el wrapper ── */}
       <div className="lv4-ticker-outer">
