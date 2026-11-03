@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef, memo } from "react";
+import { createPortal } from "react-dom";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
@@ -503,6 +504,7 @@ const injectStyles = () => {
       transition:transform 0.3s,color 0.3s;
     }
     .lv4-bday-btn:hover .lv4-bday-arrow { transform:translateX(5px);color:var(--pink); }
+
   `;
   document.head.appendChild(s);
 };
@@ -537,6 +539,228 @@ const TICK = [
   { text: "Juntos", bold: true },
   { text: "♥", bold: false },
 ];
+
+// ─── RECORDATORIO — sobrecito + carta en modal ────────────────────────────────
+// Edita estos párrafos con tus propias palabras (cada elemento es un párrafo)
+const RECORDATORIO = [
+  "Este recordatorio es para que lo leas cuando lo necesites. Cuando sientas que todo va mal o que no hay salida, quiero que recuerdes que, aunque te sientas sola, aquí estoy para ti. La vida son etapas, y aunque algunas sean muy difíciles, siempre hay una manera de salir adelante. Todo va a mejorar.",
+  "No todo en la vida es color de rosa, como siempre te lo dije, pero sé que eres una persona fuerte y valiente. No dejes que nada ni nadie te haga sentir de otra manera. Te admiro mucho, y vas a ver que pronto las cosas van a ir mejorando. Si tienes ganas de escribirme o hablarme, hazlo. Algún día te prometí que no te iba a dejar sola, y aquí seguire siempre.",
+  "Vuelve aquí cuando quieras, a este rincón que solo es nuestro. Y si algún día te pasan por la cabeza pensamientos malos, ten en mente que vales muchísimo y que hay personas que te aman y te extrañan siempre. Te amo y te extraño más que el primer día, amor de mi vida.",
+];
+
+const Recordatorio = memo(() => {
+  const [open, setOpen] = useState(false);
+
+  // Escape cierra y se bloquea el scroll del fondo mientras la carta está abierta
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  return (
+    <>
+      {/* ── TARJETA CON EL SOBRE (mismo estilo que carta y video) ── */}
+      <div
+        style={{
+          flex: "1 1 320px",
+          maxWidth: "420px",
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: "16px",
+          border: "1px solid rgba(255,64,129,0.35)",
+          background: "var(--bg)",
+          backdropFilter: "blur(16px)",
+          padding: "1rem 1rem 1.1rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.8rem",
+        }}
+      >
+        {/* resplandor */}
+        <div style={{
+          position: "absolute", top: "-40px", right: "-40px",
+          width: "140px", height: "140px", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,64,129,0.35), transparent 70%)",
+          filter: "blur(18px)", pointerEvents: "none",
+        }} />
+
+        {/* encabezado */}
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          position: "relative", zIndex: 1,
+        }}>
+          <span style={{
+            fontFamily: "'Space Mono',monospace", fontSize: "0.56rem",
+            letterSpacing: "0.2em", color: "var(--pink)", textTransform: "uppercase",
+          }}>
+            Recordatorio
+          </span>
+          <motion.span
+            animate={{ scale: [1, 1.3, 1] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+            style={{ color: "var(--pink)", display: "inline-block" }}
+          >
+            ♥
+          </motion.span>
+        </div>
+
+        {/* sobre (botón) */}
+        <motion.button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Abrir recordatorio"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            position: "relative", zIndex: 1,
+            flex: 1, minHeight: "340px", width: "100%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "transparent", backgroundColor: "transparent",
+            border: "none", boxShadow: "none", outline: "none",
+            appearance: "none", WebkitAppearance: "none",
+            WebkitTapHighlightColor: "transparent",
+            cursor: "pointer", padding: 0,
+          }}
+        >
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            style={{ position: "relative", width: "94%", aspectRatio: "4 / 3" }}
+          >
+            {/* cuerpo */}
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: "10px",
+              background: "linear-gradient(135deg, rgba(255,64,129,0.75), rgba(147,51,234,0.7))",
+              border: "1px solid rgba(255,64,129,0.55)",
+              boxShadow: "0 10px 34px rgba(255,64,129,0.35)",
+            }} />
+            {/* bolsillo en V */}
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: "10px",
+              background: "linear-gradient(135deg, rgba(255,64,129,0.55), rgba(147,51,234,0.5))",
+              clipPath: "polygon(0 36%, 50% 70%, 100% 36%, 100% 100%, 0 100%)",
+            }} />
+            {/* solapa */}
+            <div style={{
+              position: "absolute", top: 0, left: 0, right: 0, height: "62%",
+              background: "linear-gradient(180deg, rgba(255,105,160,0.95), rgba(214,24,90,0.85))",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+              borderRadius: "10px 10px 0 0",
+            }} />
+            {/* sello */}
+            <div style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%,-50%)",
+              width: "62px", height: "62px", borderRadius: "50%",
+              background: "#fff", color: "#d6185a",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "1.7rem", boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+            }}>
+              ♥
+            </div>
+          </motion.div>
+        </motion.button>
+      </div>
+
+      {/* ── MODAL (portal al body: no empuja nada hacia abajo) ── */}
+      {createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              key="recordatorio-modal"
+              onClick={() => setOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                position: "fixed", inset: 0, zIndex: 2000,
+                background: "rgba(10,0,8,0.65)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                padding: "1.2rem",
+              }}
+            >
+              <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-label="Recordatorio"
+                onClick={(e) => e.stopPropagation()}
+                initial={{ opacity: 0, y: 60, scale: 0.9, rotate: -2 }}
+                animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  position: "relative",
+                  width: "100%", maxWidth: "440px", maxHeight: "85vh",
+                  overflowY: "auto",
+                  background: "#fff8f0", color: "#3a1f2b",
+                  borderRadius: "14px",
+                  borderTop: "5px solid #ff4081",
+                  padding: "1.8rem 1.6rem 1.4rem",
+                  boxShadow: "0 20px 70px rgba(255,64,129,0.35)",
+                  fontFamily: "'Space Grotesk',sans-serif",
+                }}
+              >
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Cerrar"
+                  style={{
+                    position: "absolute", top: "0.6rem", right: "0.7rem",
+                    width: "32px", height: "32px", borderRadius: "50%",
+                    border: "none", background: "rgba(214,24,90,0.1)",
+                    color: "#d6185a", fontSize: "1rem", cursor: "pointer",
+                  }}
+                >
+                  ✕
+                </button>
+
+                <p style={{
+                  fontFamily: "'Bebas Neue',sans-serif", fontSize: "1.9rem",
+                  letterSpacing: "0.05em", margin: "0 0 0.8rem", color: "#d6185a",
+                }}>
+                  Para ti, Amor mio
+                </p>
+
+                {RECORDATORIO.map((p, i) => (
+                  <motion.p
+                    key={i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + i * 0.25, duration: 0.5 }}
+                    style={{
+                      fontSize: "0.92rem", fontStyle: "italic",
+                      lineHeight: 1.75, margin: "0 0 0.9rem",
+                    }}
+                  >
+                    {p}
+                  </motion.p>
+                ))}
+
+                <span style={{
+                  fontFamily: "'Space Mono',monospace", fontSize: "0.6rem",
+                  letterSpacing: "0.18em", color: "#d6185a",
+                  textTransform: "uppercase", display: "block", marginTop: "0.5rem",
+                }}>
+                  — Tu amor eterno, Eithan :D
+                </span>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
+  );
+});
 
 // ─── HOME ──────────────────────────────────────────────────────────────────────
 function Home({ mode, toggleMode }) {
@@ -614,7 +838,7 @@ function Home({ mode, toggleMode }) {
           Cada día contigo es la página más bonita de esta historia.
         </motion.p>
       </div>
-          {/* CARTA + VIDEO */}
+          {/* CARTA + VIDEO + RECORDATORIO */}
 <motion.div
   {...fade(0.6)}
   style={{
@@ -625,6 +849,9 @@ function Home({ mode, toggleMode }) {
     alignItems: "stretch",
   }}
 >
+  {/* RECORDATORIO (primero) */}
+  <Recordatorio />
+
   {/* CARTA */}
   <div
     style={{
@@ -780,9 +1007,10 @@ function Home({ mode, toggleMode }) {
         margin: 0,
       }}
     >
-      Estoy seguro que volveremos a ser estos dos, no te tardes tanto por favor, yo te estare esparando mi vida entera si es necesarioe, te prometo amarte por el resto de mis dias, te amo y te extraño cada dia más mi vida hermosa ♥
+      Estoy seguro que volveremos a ser estos dos, no te tardes tanto por favor, yo te estare esparando mi vida entera si es necesario, te prometo amarte por el resto de mis dias, te amo y te extraño cada dia más mi vida hermosa ♥
     </p>
   </motion.div>
+
 </motion.div>
 
       {/* ── TICKER — CSS puro, sin motion en el wrapper ── */}
